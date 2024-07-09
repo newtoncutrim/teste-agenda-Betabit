@@ -6,6 +6,11 @@
                     <div class="card-body">
                         <h1 class="text-center mb-4">{{ isLogin ? 'Login' : 'Cadastro' }}</h1>
                         <form @submit.prevent="isLogin ? login() : register()">
+                            <div v-if="!isLogin" class="mb-3">
+                                <label for="name" class="form-label">Nome</label>
+                                <input type="text" class="form-control" id="name"
+                                    v-model="name" required>
+                            </div>
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>
                                 <input type="email" class="form-control" id="email" v-model="email" required>
@@ -14,12 +19,7 @@
                                 <label for="password" class="form-label">Password</label>
                                 <input type="password" class="form-control" id="password" v-model="password" required>
                             </div>
-                            <!-- Adicionando campo de confirmação de senha apenas para o cadastro -->
-                            <div v-if="!isLogin" class="mb-3">
-                                <label for="confirmPassword" class="form-label">Confirm Password</label>
-                                <input type="password" class="form-control" id="confirmPassword"
-                                    v-model="confirmPassword" required>
-                            </div>
+                            
                             <button type="submit" class="btn btn-primary w-100">
                                 {{ isLogin ? 'Login' : 'Cadastrar' }}
                             </button>
@@ -44,7 +44,7 @@ export default {
         return {
             email: '',
             password: '',
-            confirmPassword: '',
+            name: '',
             isLogin: true
         };
     },
@@ -53,8 +53,10 @@ export default {
             try {
                 const config = {
                     headers: {
-                        'Access-Control-Allow-Origin': '*',
-                        
+                        "Access-Control-Allow-Origin": "*",
+                        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+                        "Access-Control-Allow-Methods": "PUT, POST, GET, DELETE, OPTIONS",
+                        "Content-Type": "application/json",
                     }
                 };
 
@@ -65,7 +67,7 @@ export default {
 
                 console.log('Token:', response.data.token);
 
-                router.push({ name: 'nome_da_rota_apos_login' });
+                router.push({ name: '/login' });
             } catch (error) {
                 console.error('Erro no login:', error);
             }
@@ -73,14 +75,22 @@ export default {
 
         async register() {
             try {
+                const config = {
+                    headers: {
+                        "Access-Control-Allow-Origin": "*",
+                        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+                        "Access-Control-Allow-Methods": "PUT, POST, GET, DELETE, OPTIONS",
+                        "Content-Type": "application/json",
+                    }
+                };
                 const response = await TodoService.register({
                     email: this.email,
                     password: this.password,
-                    confirmPassword: this.confirmPassword
-                });
-                console.log('Token:', response.data.token);
+                    name: this.name
+                }, config);
+                console.log('Token:', response.data);
 
-                router.push({ name: 'nome_da_rota_apos_registro' });
+                router.push({ name: '/register' });
             } catch (error) {
                 console.error('Erro no cadastro:', error);
 

@@ -11,6 +11,11 @@ const router = createRouter({
       component: Login
     },
     {
+      path: '/register',
+      name: 'todo.register',
+      component: Login
+    },
+    {
       path: '/',
       name: 'todo.index',
       component: () => import('@/views/Todos/Tarefas.vue')

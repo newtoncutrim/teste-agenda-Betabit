@@ -2,47 +2,70 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
 {
     public function login(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+        $this->validateRequest($request, 'login');
 
-        $credentials = $request->only('email', 'password');
-        $user = User::where('email', $request->email)->first();
-        if (!$user) {
-            return response()->json(['message' => 'Email não encontrado'], 401);
+        if (Auth::attempt($request->only('email', 'password'))) {
+            $user = Auth::user();
+            $user->tokens()->delete();
+            $token = $user->createToken('authToken')->plainTextToken;
+
+            return response()->json(['token' => $token, 'user' => $user], 200);
         }
 
-        if (!auth()->attempt($credentials)) {
-            return response()->json(['message' => 'Credenciais inválidas'], 401);
-        }
-
-        return response()->json(['message' => 'Login realizado com sucesso', 'user' => $user], 200);
+        return response()->json(['error' => 'Unauthorized'], 401);
     }
 
     public function register(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
-        ]);
+        $data = $request->all();
+        $this->validateRequest($request, 'register');
 
 
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => bcrypt($data['password']),
         ]);
 
         return response()->json(['message' => 'Usuário registrado com sucesso', 'user' => $user], 200);
+    }
+
+    private function validateRequest(Request $request, $type)
+    {
+        $rules = [];
+
+        switch ($type) {
+            case 'login':
+                $rules = [
+                    'email' => 'required|email',
+                    'password' => 'required'
+                ];
+                break;
+
+            case 'register':
+                $rules = [
+                    'name' => 'required|string|max:255',
+                    'email' => 'required|string|email|max:255|unique:users',
+                    'password' => 'required|string|min:8',
+                ];
+                break;
+        }
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            response()->json(['error' => $validator->errors()], 422)->send();
+            exit;
+        }
     }
 }
