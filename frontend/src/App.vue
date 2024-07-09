@@ -8,8 +8,8 @@ import { RouterLink, RouterView } from 'vue-router'
 
 
     <div class="wrapper">
-
-      <nav>
+      <!-- v-if="isLogin" -->
+      <nav v-if="isLogin">
         <RouterLink to="/">Home</RouterLink>
         <router-link :to="{name: 'todo.create'}">Adicionar Tarefa</router-link>
 
@@ -19,7 +19,17 @@ import { RouterLink, RouterView } from 'vue-router'
 
   <RouterView />
 </template>
+<script>
 
+export default {
+  computed: {
+    isLogin(){
+      return this.$forceUpdate.name === 'login'
+    }
+  }
+}
+
+</script>
 <style scoped>
 header {
   line-height: 1.5;

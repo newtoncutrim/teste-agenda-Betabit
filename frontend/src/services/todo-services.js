@@ -22,4 +22,12 @@ export default class TodoService {
     static async destroy(id){
         return axios.delete(`/${id}`)
     }
+
+    static async login(params){
+        return axios.post('/login', params)
+    }
+
+    static async register(params){
+        return axios.post('/register', params)
+    }
 }

@@ -1,10 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import EditTarefa from '@/views/Todos/EditTarefa.vue'
-
+import Login from '@/views/Todos/Login.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    {
+      path: '/login',
+      name: 'todo.login',
+      component: Login
+    },
     {
       path: '/',
       name: 'todo.index',

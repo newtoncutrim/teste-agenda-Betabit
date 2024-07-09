@@ -1,8 +1,9 @@
 <?php
 
-use App\Http\Controllers\ContactController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\Auth\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +17,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::apiResource('contacts', ContactController::class);
+
+Route::post('/contacts/login', [LoginController::class, 'login'])->name('login');
+Route::post('/contacts/register', [LoginController::class, 'register'])->name('register');
