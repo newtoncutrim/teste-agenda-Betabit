@@ -13,7 +13,7 @@ git clone https://github.com/newtoncutrim/teste-agenda.git
 ```
 Navegue até o diretório do projeto clonado:
 ```
-cd teste-agenda
+cd teste-agenda-Betabit
 ```
 Execute o seguinte comando para iniciar os contêineres Docker e construir as imagens:
 ```
