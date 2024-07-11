@@ -1,35 +1,33 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-
 </script>
 
 <template>
-  <header>
+  <div>
+    <header>
+      <div class="wrapper">
+        <!-- v-if="isLogin" -->
+        <nav v-if="isLogin">
+          <RouterLink to="/">Home</RouterLink>
+          <router-link :to="{ name: 'todo.create' }">Adicionar Tarefa</router-link>
+        </nav>
+      </div>
+    </header>
 
-
-    <div class="wrapper">
-      <!-- v-if="isLogin" -->
-      <nav v-if="isLogin">
-        <RouterLink to="/">Home</RouterLink>
-        <router-link :to="{name: 'todo.create'}">Adicionar Tarefa</router-link>
-
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+    <RouterView />
+  </div>
 </template>
-<script>
 
+<script>
 export default {
   computed: {
-    isLogin(){
+    isLogin() {
       return this.$forceUpdate.name === 'login'
     }
   }
 }
-
 </script>
+
 <style scoped>
 header {
   line-height: 1.5;
@@ -87,7 +85,6 @@ nav a:first-of-type {
     text-align: left;
     margin-left: -1rem;
     font-size: 1rem;
-
     padding: 1rem 0;
     margin-top: 1rem;
   }
