@@ -1,33 +1,45 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+
 </script>
 
 <template>
-  <div>
-    <header>
-      <div class="wrapper">
-        <!-- v-if="isLogin" -->
-        <nav v-if="isLogin">
+  <header>
+
+
+    <div class="wrapper">
+      <nav >
+        <div v-if="isLogin">
           <RouterLink to="/">Home</RouterLink>
-          <router-link :to="{ name: 'todo.create' }">Adicionar Tarefa</router-link>
-        </nav>
-      </div>
-    </header>
+          <router-link :to="{name: 'todo.create'}">Adicionar Tarefa</router-link>
+        </div>
 
-    <RouterView />
-  </div>
+        <div v-else>
+          <router-link :to="{name: 'todo.login'}">Login</router-link>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <RouterView />
 </template>
-
 <script>
+import { ref, watchEffect } from 'vue';
 export default {
-  computed: {
-    isLogin() {
-      return this.$forceUpdate.name === 'login'
-    }
+  setup() {
+    const isLogin = ref(Boolean(localStorage.getItem('token')));
+
+    watchEffect(() => {
+      isLogin.value = Boolean(localStorage.getItem('token'));
+    });
+
+    return {
+      isLogin
+    };
   }
 }
-</script>
 
+</script>
 <style scoped>
 header {
   line-height: 1.5;
@@ -85,6 +97,7 @@ nav a:first-of-type {
     text-align: left;
     margin-left: -1rem;
     font-size: 1rem;
+
     padding: 1rem 0;
     margin-top: 1rem;
   }
