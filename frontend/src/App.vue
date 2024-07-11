@@ -8,11 +8,15 @@ import { RouterLink, RouterView } from 'vue-router'
 
 
     <div class="wrapper">
-      <!-- v-if="isLogin" -->
-      <nav v-if="isLogin">
-        <RouterLink to="/">Home</RouterLink>
-        <router-link :to="{name: 'todo.create'}">Adicionar Tarefa</router-link>
+      <nav >
+        <div v-if="isLogin">
+          <RouterLink to="/">Home</RouterLink>
+          <router-link :to="{name: 'todo.create'}">Adicionar Tarefa</router-link>
+        </div>
 
+        <div v-else>
+          <router-link :to="{name: 'todo.login'}">Login</router-link>
+        </div>
       </nav>
     </div>
   </header>
@@ -20,12 +24,18 @@ import { RouterLink, RouterView } from 'vue-router'
   <RouterView />
 </template>
 <script>
-
+import { ref, watchEffect } from 'vue';
 export default {
-  computed: {
-    isLogin(){
-      return this.$forceUpdate.name === 'login'
-    }
+  setup() {
+    const isLogin = ref(Boolean(localStorage.getItem('token')));
+
+    watchEffect(() => {
+      isLogin.value = Boolean(localStorage.getItem('token'));
+    });
+
+    return {
+      isLogin
+    };
   }
 }
 
