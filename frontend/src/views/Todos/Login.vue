@@ -67,7 +67,7 @@ export default {
 
                 console.log('Token:', response.data.token);
 
-                router.push({ name: '/login' });
+                router.push({ name: 'todo.index' });
             } catch (error) {
                 console.error('Erro no login:', error);
             }
