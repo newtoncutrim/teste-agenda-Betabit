@@ -70,7 +70,7 @@
         loading.value = true;
         TodoService.getAll()
           .then(response => {
-            console.log(response.data);
+            // console.log(response.data);
             todos.value = response.data;
           })
           .catch(error => console.log(error))

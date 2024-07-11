@@ -90,7 +90,7 @@ export default {
                 }, config);
                 console.log('Token:', response.data);
 
-                router.push({ name: '/register' });
+                router.push({ name: '/login' });
             } catch (error) {
                 console.error('Erro no cadastro:', error);
 

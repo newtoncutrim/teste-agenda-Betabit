@@ -28,7 +28,7 @@ class LoginController extends Controller
     public function register(Request $request)
     {
         $data = $request->all();
-        /* $this->validateRequest($request, 'register'); */
+        $this->validateRequest($request, 'register');
 
 
         $user = User::create([
