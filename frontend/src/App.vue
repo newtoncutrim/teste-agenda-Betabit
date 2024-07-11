@@ -8,13 +8,11 @@ import { RouterLink, RouterView } from 'vue-router'
 
     <div class="wrapper">
       <nav >
-        <div v-if="isLogin">
-          <RouterLink to="/">Home</RouterLink>
+        <div v-if="isHomeRoute ==='todo.index'">
+          <RouterLink to="/tarefas">Home</RouterLink>
           <router-link :to="{name: 'todo.create'}">Adicionar Tarefa</router-link>
         </div>
-        <div v-else>
-          <router-link :to="{name: 'todo.create'}">Adicionar Tarefa</router-link>
-        </div>
+
       </nav>
     </div>
   </header>
@@ -25,18 +23,16 @@ import { RouterLink, RouterView } from 'vue-router'
 import { ref, watchEffect } from 'vue';
 export default {
   setup() {
-    const isLogin = ref(Boolean(localStorage.getItem('token')));
-
-    watchEffect(() => {
-      isLogin.value = Boolean(localStorage.getItem('token'));
+    const isHomeRoute = computed(() => {
+      console.log(this.$route.name);
+      return this.$route.name;
     });
 
     return {
-      isLogin
+      isHomeRoute,
     };
-  }
-}
-
+  },
+};
 </script>
 <style scoped>
 header {
