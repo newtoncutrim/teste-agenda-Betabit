@@ -6,16 +6,14 @@ import { RouterLink, RouterView } from 'vue-router'
 <template>
   <header>
 
-
     <div class="wrapper">
       <nav >
         <div v-if="isLogin">
           <RouterLink to="/">Home</RouterLink>
           <router-link :to="{name: 'todo.create'}">Adicionar Tarefa</router-link>
         </div>
-
         <div v-else>
-          <router-link :to="{name: 'todo.login'}">Login</router-link>
+          <router-link :to="{name: 'todo.create'}">Adicionar Tarefa</router-link>
         </div>
       </nav>
     </div>
