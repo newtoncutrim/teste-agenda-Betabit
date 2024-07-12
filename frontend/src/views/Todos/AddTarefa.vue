@@ -8,69 +8,55 @@
       class="mx-auto mt-4 container-fluid"
     >
       <div class="form-group row p-1">
-        <label for="inputPassword" class="col-sm-2 col-form-label">Nome</label>
+        <label for="inputName" class="col-sm-2 col-form-label">Nome</label>
         <div class="col-sm-10">
           <input
             type="text"
             class="form-control"
-            id="inputPassword"
-            placeholder="nome"
-            name="name"
+            id="inputName"
+            placeholder="Nome"
             v-model="tarefa.name"
           />
           <span v-if="errors.name" class="text-danger">{{ errors.name }}</span>
         </div>
       </div>
       <div class="form-group row p-1">
-        <label for="inputPassword" class="col-sm-2 col-form-label"
-          >Endereço</label
-        >
+        <label for="inputAddress" class="col-sm-2 col-form-label">Endereço</label>
         <div class="col-sm-10">
           <input
             type="text"
             class="form-control"
-            id="inputPassword"
-            placeholder="endereço"
-            name="address"
+            id="inputAddress"
+            placeholder="Endereço"
             v-model="tarefa.address"
           />
-          <span v-if="errors.address" class="text-danger">{{
-            errors.address
-          }}</span>
+          <span v-if="errors.address" class="text-danger">{{ errors.address }}</span>
         </div>
       </div>
       <div class="form-group row p-1">
-        <label for="inputPassword" class="col-sm-2 col-form-label">Email</label>
+        <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
         <div class="col-sm-10">
           <input
             type="email"
             class="form-control"
-            id="inputPassword"
-            placeholder="email"
-            name="email"
+            id="inputEmail"
+            placeholder="Email"
             v-model="tarefa.email"
           />
-          <span v-if="errors.email" class="text-danger">{{
-            errors.email
-          }}</span>
+          <span v-if="errors.email" class="text-danger">{{ errors.email }}</span>
         </div>
       </div>
       <div class="form-group row p-1">
-        <label for="inputPassword" class="col-sm-2 col-form-label"
-          >Telefone</label
-        >
+        <label for="inputTelephone" class="col-sm-2 col-form-label">Telefone</label>
         <div class="col-sm-10">
           <input
             type="text"
             class="form-control"
-            id="inputPassword"
-            placeholder="telefone"
-            name="telephone"
+            id="inputTelephone"
+            placeholder="Telefone"
             v-model="tarefa.telephone"
           />
-          <span v-if="errors.telephone" class="text-danger">{{
-            errors.telephone
-          }}</span>
+          <span v-if="errors.telephone" class="text-danger">{{ errors.telephone }}</span>
         </div>
       </div>
       <div class="form-group row p-1">
@@ -80,12 +66,9 @@
             type="file"
             class="form-control-file"
             id="inputImage"
-            name="image"
             @change="onFileChange"
           />
-          <span v-if="errors.image" class="text-danger">{{
-            errors.image
-          }}</span>
+          <span v-if="errors.image" class="text-danger">{{ errors.image }}</span>
         </div>
       </div>
       <div class="form-group row">
@@ -99,7 +82,7 @@
 
 <script>
 import TodoService from "@/services/todo-services";
-import { ref, reactive } from "vue";
+import { reactive } from "vue";
 import router from "@/router";
 
 export default {
@@ -115,39 +98,35 @@ export default {
       image: null,
     });
 
-    const addTarefa = () => {
-      const params = {
-        name: tarefa.name,
-        address: tarefa.address,
-        email: tarefa.email,
-        telephone: tarefa.telephone,
-        image: tarefa.image,
-      };
+    const addTarefa = async () => {
+      const formData = new FormData();
+      formData.append("name", tarefa.name);
+      formData.append("address", tarefa.address);
+      formData.append("email", tarefa.email);
+      formData.append("telephone", tarefa.telephone);
+      if (tarefa.image) {
+        formData.append("image", tarefa.image);
+      }
 
-    //   console.log(params);
-
-      TodoService.addTarefa(params)
-        .then(() => router.push({ name: "todo.index" }))
-        .catch((error) => {
-          if (error.response && error.response.status === 422) {
-            const responseData = error.response.data;
-            errors.name = responseData.errors.name
-              ? responseData.errors.name[0]
-              : "";
-            errors.address = responseData.errors.address
-              ? responseData.errors.address[0]
-              : "";
-            errors.email = responseData.errors.email
-              ? responseData.errors.email[0]
-              : "";
-            errors.telephone = responseData.errors.telephone
-              ? responseData.errors.telephone[0]
-              : "";
-            errors.image = responseData.errors.image
-              ? responseData.errors.image[0]
-              : "";
-          }
+      try {
+        await TodoService.addTarefa(formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         });
+        router.push({ name: "todo.index" });
+      } catch (error) {
+        if (error.response && error.response.status === 422) {
+          const responseData = error.response.data;
+          errors.name = responseData.errors.name ? responseData.errors.name[0] : "";
+          errors.address = responseData.errors.address ? responseData.errors.address[0] : "";
+          errors.email = responseData.errors.email ? responseData.errors.email[0] : "";
+          errors.telephone = responseData.errors.telephone
+            ? responseData.errors.telephone[0]
+            : "";
+          errors.image = responseData.errors.image ? responseData.errors.image[0] : "";
+        }
+      }
     };
 
     const onFileChange = (e) => {
