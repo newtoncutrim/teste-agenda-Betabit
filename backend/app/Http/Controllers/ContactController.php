@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Contact;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class ContactController extends Controller
 {
@@ -31,7 +33,7 @@ class ContactController extends Controller
                 'email' => 'required|email|unique:contacts',
                 'address' => 'required|string',
                 'telephone' => 'required|string',
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Adicionando validação para a imagem
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             ],
             [
                 'name.required' => 'O campo nome é obrigatório.',
@@ -73,34 +75,53 @@ class ContactController extends Controller
 
     public function update(Request $request, $id)
     {
-        $contact = $this->model->find($id);
+        $contact = Contact::findOrFail($id);
+
+        $rules = [
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'address' => 'required|string',
+            'telephone' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ];
+
+        if ($request->email !== $contact->email) {
+
+            $rules['email'] .= '|unique:contacts,email,' . $id;
+        }
+
+        $customMessages = [
+            'name.required' => 'O campo nome é obrigatório.',
+            'name.string' => 'O campo nome deve ser uma string.',
+            'email.required' => 'O campo email é obrigatório.',
+            'email.email' => 'O campo email deve ser um endereço de e-mail válido.',
+            'email.unique' => 'O email já está sendo usado por outro contato.',
+            'address.required' => 'O campo endereço é obrigatório.',
+            'address.string' => 'O campo endereço deve ser uma string.',
+            'telephone.required' => 'O campo telefone é obrigatório.',
+            'telephone.string' => 'O campo telefone deve ser uma string.',
+            'image.image' => 'O arquivo deve ser uma imagem.',
+            'image.mimes' => 'A imagem deve ser do tipo: jpeg, png, jpg, gif.',
+            'image.max' => 'A imagem não deve ser maior que 2MB.',
+        ];
 
 
-        $data = $request->validate(
-            [
-                'name' => 'required|string',
-                'email' => 'required|email|unique:contacts,email,' . $id,
-                'address' => 'required|string',
-                'telephone' => 'required|string',
-            ],
+        $data = $request->validate($rules, $customMessages);
 
-            [
-                'name.required' => 'O campo nome é obrigatório.',
-                'name.string' => 'O campo nome deve ser uma string.',
-                'email.required' => 'O campo email é obrigatório.',
-                'email.email' => 'O campo email deve ser um endereço de e-mail válido.',
-                'email.unique' => 'O email já está sendo usado por outro contato.',
-                'address.required' => 'O campo endereço é obrigatório.',
-                'address.string' => 'O campo endereço deve ser uma string.',
-                'telephone.required' => 'O campo telefone é obrigatório.',
-                'telephone.string' => 'O campo telefone deve ser uma string.',
-            ]
-        );
+        if ($request->hasFile('image')) {
+            if ($contact->image) {
+                Storage::disk('public')->delete($contact->image);
+            }
+            $imageName = $request->file('image')->store('images', 'public');
+            $data['image'] = $imageName;
+        }
 
         $contact->update($data);
 
         return response()->json($contact, 200);
     }
+
+
 
     public function destroy($id)
     {

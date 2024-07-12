@@ -12,7 +12,7 @@ export default class TodoService {
     }
 
     static async editTarefa(id, params){
-        return axios.put( `/${id}`, params )
+        return axios.post( `${id}/update`, params )
     }
 
     static async getOne(id){
