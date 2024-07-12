@@ -17,6 +17,7 @@ use App\Http\Controllers\Auth\LoginController;
 */
 
 Route::apiResource('contacts', ContactController::class);
+Route::put('/contacts/{id}/update', [ContactController::class, 'update'])->name('contacts.update');
 
 Route::post('/contacts/login', [LoginController::class, 'login'])->name('login');
 Route::post('/contacts/register', [LoginController::class, 'register'])->name('register');

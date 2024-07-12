@@ -50,8 +50,7 @@ class ContactController extends Controller
         );
 
         if ($request->hasFile('image')) {
-            $imageName = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('images'), $imageName);
+            $imageName = $request->file('image')->store('images', 'public');
             $data['image'] = $imageName;
         }
 
