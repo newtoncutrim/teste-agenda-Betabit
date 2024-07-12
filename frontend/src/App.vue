@@ -1,38 +1,28 @@
-<script setup>
-import { RouterLink, RouterView } from 'vue-router'
-
-</script>
-
 <template>
   <header>
-
     <div class="wrapper">
-      <nav >
-        <div v-if="isHomeRoute ==='todo.index'">
-          <RouterLink to="/tarefas">Home</RouterLink>
-          <router-link :to="{name: 'todo.create'}">Adicionar Tarefa</router-link>
+      <nav>
+        <div v-if="$route.name.includes('login')">
         </div>
-
+        <div v-else>
+          <RouterLink to="/tarefas">Home</RouterLink>
+          <RouterLink :to="{ name: 'todo.create' }">Adicionar Tarefa</RouterLink>
+        </div>
       </nav>
     </div>
   </header>
 
   <RouterView />
 </template>
-<script>
-import { ref, watchEffect } from 'vue';
-export default {
-  setup() {
-    const isHomeRoute = computed(() => {
-      console.log(this.$route.name);
-      return this.$route.name;
-    });
 
-    return {
-      isHomeRoute,
-    };
-  },
-};
+<script setup>
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+
+const $route = useRoute();
+const isLoggedIn = computed(() => {
+  return false;
+});
 </script>
 <style scoped>
 header {
