@@ -25,7 +25,7 @@ const isLoggedIn = computed(() => {
 });
 </script>
 <style scoped>
-header {
+header {git 
   line-height: 1.5;
   max-height: 100vh;
 }
