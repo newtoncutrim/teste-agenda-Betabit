@@ -16,7 +16,9 @@ use App\Http\Controllers\Auth\LoginController;
 |
 */
 
-Route::apiResource('contacts', ContactController::class);
+// Route::apiResource('contacts', ContactController::class);
+Route::post('/contacts/store', [ ContactController::class, 'store'])->name('contacts.store');
+
 
 Route::post('/contacts/login', [LoginController::class, 'login'])->name('login');
 Route::post('/contacts/register', [LoginController::class, 'register'])->name('register');

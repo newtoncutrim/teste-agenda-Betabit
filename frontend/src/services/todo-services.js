@@ -1,5 +1,6 @@
 
 import axios from "axios";
+const URL_API = 'http://localhost:8989/api/contacts'
 
 export default class TodoService {
 
@@ -8,7 +9,7 @@ export default class TodoService {
     }
 
     static async addTarefa(params){
-       return axios.post("/", params) 
+       return axios.post(`${URL_API}/create`, params) 
     }
 
     static async editTarefa(id, params){

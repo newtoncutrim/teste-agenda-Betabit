@@ -23,26 +23,27 @@ class ContactController extends Controller
 
     public function store(Request $request)
     {
-        Log::info($request->all());
-        $data = $request->validate(
-            [
-                'name' => 'required|string',
-                'email' => 'required|email|unique:contacts',
-                'address' => 'required|string',
-                'telephone' => 'required|string',
-            ],
-            [
-                'name.required' => 'O campo nome é obrigatório.',
-                'name.string' => 'O campo nome deve ser uma string.',
-                'email.required' => 'O campo email é obrigatório.',
-                'email.email' => 'O campo email deve ser um endereço de e-mail válido.',
-                'email.unique' => 'O email já está sendo usado por outro contato.',
-                'address.required' => 'O campo endereço é obrigatório.',
-                'address.string' => 'O campo endereço deve ser uma string.',
-                'telephone.required' => 'O campo telefone é obrigatório.',
-                'telephone.string' => 'O campo telefone deve ser uma string.',
-            ]
-        );
+        $data = $request->all();
+        // Log::info($request->all());
+        // $data = $request->validate(
+        //     [
+        //         'name' => 'required|string',
+        //         'email' => 'required|email|unique:contacts',
+        //         'address' => 'required|string',
+        //         'telephone' => 'required|string',
+        //     ],
+        //     [
+        //         'name.required' => 'O campo nome é obrigatório.',
+        //         'name.string' => 'O campo nome deve ser uma string.',
+        //         'email.required' => 'O campo email é obrigatório.',
+        //         'email.email' => 'O campo email deve ser um endereço de e-mail válido.',
+        //         'email.unique' => 'O email já está sendo usado por outro contato.',
+        //         'address.required' => 'O campo endereço é obrigatório.',
+        //         'address.string' => 'O campo endereço deve ser uma string.',
+        //         'telephone.required' => 'O campo telefone é obrigatório.',
+        //         'telephone.string' => 'O campo telefone deve ser uma string.',
+        //     ]
+        // );
 
         $contact = Contact::create($data);
 

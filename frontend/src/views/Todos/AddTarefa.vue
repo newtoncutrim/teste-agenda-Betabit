@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <section class="form-create">
     <h1 class="p-3">Adicionar Tarefa</h1>
     <form
       action="#"
@@ -90,17 +90,24 @@
       </div>
       <div class="form-group row">
         <div class="col-sm-12 text-end">
-          <button class="btn btn-primary" type="submit">Criar</button>
+          <button
+            @submit.prevent="addTarefa"
+            class="btn btn-primary"
+            type="submit"
+          >
+            Criar
+          </button>
         </div>
       </div>
     </form>
-  </div>
+  </section>
 </template>
 
 <script>
 import TodoService from "@/services/todo-services";
 import { ref, reactive } from "vue";
 import router from "@/router";
+import axios from "axios";
 
 export default {
   name: "AddTarefa",
@@ -124,10 +131,10 @@ export default {
         image: tarefa.image,
       };
 
-    //   console.log(params);
-
-      TodoService.addTarefa(params)
-        .then(() => router.push({ name: "todo.index" }))
+      axios
+        .post("http://localhost:8989/api/contacts/store", params)
+        .then((response) => console.log(response))
+        // || router.push({ name: "todo.index" })
         .catch((error) => {
           if (error.response && error.response.status === 422) {
             const responseData = error.response.data;
@@ -163,3 +170,15 @@ export default {
   },
 };
 </script>
+<style scoped>
+.form-create {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  max-width: 500px;
+  margin: 0 auto;
+  margin-top: 30px;
+  padding: 30px;
+}
+</style>

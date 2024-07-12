@@ -1,38 +1,36 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import EditTarefa from '@/views/Todos/EditTarefa.vue'
-import Login from '@/views/Todos/Login.vue';
+import { createRouter, createWebHistory } from 'vue-router';
+import Login from '../views/Login.vue';
+import Tarefas from '@/views/Todos/Tarefas.vue';
+import EditTarefa from '@/views/Todos/EditTarefa.vue';
+import AddTarefa from '@/views/Todos/AddTarefa.vue';
+
+
+const routes = [
+  {
+    path: '/login',
+    name: 'login',
+    component: Login
+  },
+  {
+    path: '/todo',
+    name: 'todo',
+    component: Tarefas
+  },
+  {
+    path: '/todo/:id/edit',
+    name: 'todo.edit',
+    component: EditTarefa
+  },
+  {
+    path: '/todo/create',
+    name: 'todo.create',
+    component: AddTarefa
+  },
+];
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: '/login',
-      name: 'todo.login',
-      component: Login
-    },
-    {
-      path: '/register',
-      name: 'todo.register',
-      component: Login
-    },
-    {
-      path: '/tarefas',
-      name: 'todo.index',
-      component: () => import('@/views/Todos/Tarefas.vue')
-    },
-    {
-      path: '/todo/create',
-      name: 'todo.create',
-      component: () => import('@/views/Todos/AddTarefa.vue')
-    },
-    {
-      path: '/todo/:id/edit',
-      name: 'todo.edit',
-      props: true,
-      component: EditTarefa
-/*       component: () => import('@/views/Todos/EditTarefa.vue') */
-    },
-  ]
-})
+  routes
+});
 
-export default router
+export default router;
