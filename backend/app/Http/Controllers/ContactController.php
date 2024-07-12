@@ -24,12 +24,14 @@ class ContactController extends Controller
     public function store(Request $request)
     {
         Log::info($request->all());
+
         $data = $request->validate(
             [
                 'name' => 'required|string',
                 'email' => 'required|email|unique:contacts',
                 'address' => 'required|string',
                 'telephone' => 'required|string',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Adicionando validação para a imagem
             ],
             [
                 'name.required' => 'O campo nome é obrigatório.',
@@ -41,13 +43,23 @@ class ContactController extends Controller
                 'address.string' => 'O campo endereço deve ser uma string.',
                 'telephone.required' => 'O campo telefone é obrigatório.',
                 'telephone.string' => 'O campo telefone deve ser uma string.',
+                'image.image' => 'O arquivo deve ser uma imagem.',
+                'image.mimes' => 'A imagem deve estar em formato: jpeg, png, jpg, gif.',
+                'image.max' => 'A imagem não pode ter mais de 2MB.',
             ]
         );
+
+        if ($request->hasFile('image')) {
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->move(public_path('images'), $imageName);
+            $data['image'] = $imageName;
+        }
 
         $contact = Contact::create($data);
 
         return response()->json($contact, 201);
     }
+
 
     public function show($id)
     {
