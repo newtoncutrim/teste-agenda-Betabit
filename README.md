@@ -9,7 +9,7 @@ Instalação
 Clone o repositório do projeto Teste-Agenda do GitHub:
 
 ```
-git clone https://github.com/newtoncutrim/teste-agenda.git
+git clone https://github.com/newtoncutrim/teste-agenda-Betabit.git
 ```
 Navegue até o diretório do projeto clonado:
 ```
