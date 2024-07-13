@@ -9,7 +9,7 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'todo.login',
+      name: 'login.index',
       component: Login
     },
     {
