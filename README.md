@@ -19,6 +19,12 @@ Execute o seguinte comando para iniciar os contêineres Docker e construir as im
 ```
 docker compose up -d --build
 ```
+
+link
+```
+docker compose exec app php artisan storage:link
+```
+
 Instale as dependências do Composer executando o seguinte comando:
 ```
 docker compose exec app composer install

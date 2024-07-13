@@ -35,5 +35,17 @@ const router = createRouter({
     },
   ]
 })
-
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    // Verifique se o usuário está autenticado
+    if (!store.getters.isAuthenticated) {
+      // Redirecionar para a página de login
+      next({ name: 'login.index' });
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+})
 export default router
